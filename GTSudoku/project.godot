@@ -8,10 +8,30 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Node2D",
+"class": "FakeConfettiParticles",
+"language": "GDScript",
+"path": "res://scripts/fake_confetti_particles.gd"
+} ]
+_global_script_class_icons={
+"FakeConfettiParticles": ""
+}
+
 [application]
 
 config/name="GTSudoku"
+run/main_scene="res://TopScene.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Global="*res://Global.tscn"
+
+[display]
+
+window/size/width=500
+window/size/height=900
 
 [physics]
 
