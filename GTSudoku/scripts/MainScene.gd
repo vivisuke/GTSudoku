@@ -227,14 +227,14 @@ func gen_quest():
 	rng.set_seed(stxt.hash())
 	while true:
 		gen_ans()
-		gen_cages()
-		if g.qLevel == LVL_BEGINNER:
-			if count_n_cell_cage(1) < 8:
-				continue			# 再生成
+		#gen_cages()
+		#if g.qLevel == LVL_BEGINNER:
+		#	if count_n_cell_cage(1) < 8:
+		#		continue			# 再生成
 		#	#split_2cell_cage()		# 1セルケージ数が４未満なら２セルケージを分割
 		#el
-		if g.qLevel == LVL_NORMAL:
-			merge_2cell_cage()
+		#if g.qLevel == LVL_NORMAL:
+		#	merge_2cell_cage()
 			#if count_n_cell_cage(3) <= 3:
 			#merge_2cell_cage()
 		#print_cages()
@@ -705,6 +705,7 @@ func ipq_sub(cix, lix, ub, sum) -> bool:	# false for 解の個数が２以上
 	return nAnswer < 2
 # cage_list をチェック、手がかり数字は無し
 func is_proper_quest() -> bool:
+	return true
 	nAnswer = 0
 	for ix in range(N_CELLS): cell_bit[ix] = 0
 	for ix in range(N_HORZ):
