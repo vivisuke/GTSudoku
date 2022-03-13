@@ -348,7 +348,7 @@ func init_labels():
 			# 手がかり数字用ラベル
 			var label = ClueLabel.instance()
 			clue_labels.push_back(label)
-			label.rect_position = Vector2(px, py + 2)
+			label.rect_position = Vector2(px+14, py + 10)
 			label.text = ""		#String((x+y)%9 + 1)
 			$Board.add_child(label)
 			# 入力数字用ラベル
