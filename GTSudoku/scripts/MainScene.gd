@@ -131,7 +131,9 @@ var input_num = 0			# 入力された数字
 var nRemoved
 var nAnswer = 0				# 解答数
 
-var cage_labels = []		# ケージ合計数字用ラベル配列
+var greaters_horz = []		# 水平方向不等号スプライト
+var greaters_vert = []		# 垂直方向不等号スプライト
+#var cage_labels = []		# ケージ合計数字用ラベル配列
 var clue_labels = []		# 手がかり数字用ラベル配列
 var input_labels = []		# 入力数字用ラベル配列
 var ans_num = []			# 解答の各セル数値、1～N_HORZ
@@ -159,6 +161,7 @@ var MemoLabel = load("res://MemoLabel.tscn")
 var FallingChar = load("res://FallingChar.tscn")
 var FallingMemo = load("res://FallingMemo.tscn")
 var FallingCoin = load("res://FallingCoin.tscn")
+var Greater = load("res://Greater.tscn")
 
 onready var g = get_node("/root/Global")
 
@@ -194,11 +197,13 @@ func _ready():
 	$CoinButton/NCoinLabel.text = String(g.env[g.KEY_N_COINS])
 	init_labels()
 	$Board.memo_labels = memo_labels
+	init_greaters()
 	#gen_ans()		# 答え生成
 	#show_clues()	# 手がかり数字表示
 	#gen_cages()		# ケージ生成
 	#is_proper_quest()
 	gen_quest()
+	update_greaters()
 	g.elapsedTime = 0.0
 	$CanvasLayer/ColorRect.material.set_shader_param("size", 0)
 	update_all_status()
@@ -278,6 +283,49 @@ func bit_to_numstr(b):
 	return String(bit_to_num(b))
 #func memo_label_pos(px, py, h, v):
 #	return Vector2(px + CELL_WIDTH4*(h+1)-3, py + CELL_WIDTH3*(v+1)+2)
+func init_greaters():
+	# 水平方向
+	for y in range(N_VERT):
+		var py = (y + 0.5) * CELL_WIDTH		# 中点位置
+		for x in range(1, N_HORZ):
+			if x % 3 != 0:
+				var px = x * CELL_WIDTH
+				var gt = Greater.instance()
+				greaters_horz.push_back(gt)
+				gt.position = Vector2(px, py)
+				$Board.add_child(gt)
+	# 垂直方向
+	for x in range(N_HORZ):
+		var px = (x + 0.5) * CELL_WIDTH		# 中点位置
+		for y in range(1, N_VERT):
+			if y % 2 != 0:
+				var py = y * CELL_WIDTH
+				var gt = Greater.instance()
+				greaters_vert.push_back(gt)
+				gt.rotation_degrees = 90
+				gt.position = Vector2(px, py)
+				$Board.add_child(gt)
+func update_greaters():
+	var gix = 0
+	for y in range(N_VERT):
+		for x in range(1, N_HORZ):
+			if x % 3 != 0:
+				var ix = xyToIX(x, y)
+				if ans_num[ix-1] > ans_num[ix]:
+					greaters_horz[gix].rotation_degrees = 0
+				else:
+					greaters_horz[gix].rotation_degrees = 180
+				gix += 1
+	gix = 0
+	for x in range(N_HORZ):
+		for y in range(1, N_VERT):
+			if y % 2 != 0:
+				var ix = xyToIX(x, y)
+				if ans_num[ix-N_HORZ] > ans_num[ix]:
+					greaters_vert[gix].rotation_degrees = 90
+				else:
+					greaters_vert[gix].rotation_degrees = 270
+				gix += 1
 func init_labels():
 	# 手がかり数字、入力数字用 Label 生成
 	for y in range(N_VERT):
@@ -285,14 +333,14 @@ func init_labels():
 			var px = x * CELL_WIDTH
 			var py = y * CELL_WIDTH
 			# ケージ合計用ラベル
-			var label = CageLabel.instance()
-			cage_labels.push_back(label)
-			label.add_color_override("font_color", Color("#2980b9"))	# VELIZE HOLE
-			label.rect_position = Vector2(px + 4, py + 4)
-			label.text = ""
-			$Board.add_child(label)
+			#var label = CageLabel.instance()
+			#cage_labels.push_back(label)
+			#label.add_color_override("font_color", Color("#2980b9"))	# VELIZE HOLE
+			#label.rect_position = Vector2(px + 4, py + 4)
+			#label.text = ""
+			#$Board.add_child(label)
 			# 手がかり数字用ラベル
-			label = ClueLabel.instance()
+			var label = ClueLabel.instance()
 			clue_labels.push_back(label)
 			label.rect_position = Vector2(px, py + 2)
 			label.text = ""		#String((x+y)%9 + 1)
@@ -300,7 +348,7 @@ func init_labels():
 			# 入力数字用ラベル
 			label = InputLabel.instance()
 			input_labels.push_back(label)
-			label.rect_position = Vector2(px+12, py + 8)
+			label.rect_position = Vector2(px+14, py + 10)
 			label.text = ""
 			$Board.add_child(label)
 			# 候補数字用ラベル
@@ -1172,8 +1220,8 @@ func _on_PauseButton_pressed():
 				lst.push_back(memo_labels[ix][i].text)
 				memo_labels[ix][i].text = ""
 			memo_text[ix] = lst
-			if cage_labels[ix].text != "":
-				cage_labels[ix].text = "?"
+			#if cage_labels[ix].text != "":
+			#	cage_labels[ix].text = "?"
 		for i in range(N_HORZ+1):
 			num_buttons[i].disabled = true
 	else:
