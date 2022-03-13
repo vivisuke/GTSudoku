@@ -615,8 +615,8 @@ func get_cell_state() -> Array:
 			s.push_back(get_memo_bits(ix) + BIT_MEMO)
 	return s
 func get_cell_numer(ix) -> int:		# ix 位置に入っている数字の値を返す、0 for 空欄
-	#if clue_labels[ix].text != "":
-	#	return int(clue_labels[ix].text)
+	if clue_labels[ix].text != "":
+		return int(clue_labels[ix].text)
 	if input_labels[ix].text != "":
 		return int(input_labels[ix].text)
 	return 0
