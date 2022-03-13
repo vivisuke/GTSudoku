@@ -24,8 +24,8 @@ const CAGE_N_NUM_MAX = 4	# ケージ最大セル数
 const N_VERT = 6
 const N_HORZ = 6
 const N_CELLS = N_HORZ * N_VERT
-const N_BOX_VERT = 2
-const N_BOX_HORZ = 3
+const N_BOX_VERT = 2		# 3x2ブロック縦セル数
+const N_BOX_HORZ = 3		# 3x2ブロック横セル数
 const CELL_WIDTH = 81
 const CELL_WIDTH3 = CELL_WIDTH/3
 const CELL_WIDTH4 = CELL_WIDTH/4
@@ -288,7 +288,7 @@ func init_greaters():
 	for y in range(N_VERT):
 		var py = (y + 0.5) * CELL_WIDTH		# 中点位置
 		for x in range(1, N_HORZ):
-			if x % 3 != 0:
+			if x % N_BOX_HORZ != 0:
 				var px = x * CELL_WIDTH
 				var gt = Greater.instance()
 				greaters_horz.push_back(gt)
@@ -298,7 +298,7 @@ func init_greaters():
 	for x in range(N_HORZ):
 		var px = (x + 0.5) * CELL_WIDTH		# 中点位置
 		for y in range(1, N_VERT):
-			if y % 2 != 0:
+			if y % N_BOX_VERT != 0:
 				var py = y * CELL_WIDTH
 				var gt = Greater.instance()
 				greaters_vert.push_back(gt)
@@ -309,7 +309,7 @@ func update_greaters():
 	var gix = 0
 	for y in range(N_VERT):
 		for x in range(1, N_HORZ):
-			if x % 3 != 0:
+			if x % N_BOX_HORZ != 0:
 				var ix = xyToIX(x, y)
 				if ans_num[ix-1] > ans_num[ix]:
 					greaters_horz[gix].rotation_degrees = 0
@@ -319,7 +319,7 @@ func update_greaters():
 	gix = 0
 	for x in range(N_HORZ):
 		for y in range(1, N_VERT):
-			if y % 2 != 0:
+			if y % N_BOX_VERT != 0:
 				var ix = xyToIX(x, y)
 				if ans_num[ix-N_HORZ] > ans_num[ix]:
 					greaters_vert[gix].rotation_degrees = 90
