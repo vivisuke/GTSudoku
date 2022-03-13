@@ -199,11 +199,11 @@ func _ready():
 	$Board.memo_labels = memo_labels
 	init_greaters()
 	#gen_ans()		# 答え生成
-	#show_clues()	# 手がかり数字表示
 	#gen_cages()		# ケージ生成
 	#is_proper_quest()
 	gen_quest()
 	update_greaters()
+	show_clues()	# 手がかり数字表示
 	g.elapsedTime = 0.0
 	$CanvasLayer/ColorRect.material.set_shader_param("size", 0)
 	update_all_status()
@@ -326,6 +326,12 @@ func update_greaters():
 				else:
 					greaters_vert[gix].rotation_degrees = 270
 				gix += 1
+func show_clues():
+	var lst = []
+	for ix in range(N_CELLS): lst.push_back(ix)
+	lst.shuffle()
+	for i in range(6):
+		clue_labels[lst[i]].text = String(ans_num[lst[i]])
 func init_labels():
 	# 手がかり数字、入力数字用 Label 生成
 	for y in range(N_VERT):
